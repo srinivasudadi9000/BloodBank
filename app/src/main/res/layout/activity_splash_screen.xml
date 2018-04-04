@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    tools:context="com.bloodbank.SplashScreenActivity">
+
+   <ImageView
+       android:foregroundGravity="center"
+       android:id="@+id/logo_img"
+       android:layout_width="200dp"
+       android:layout_height="200dp"
+       android:src="@drawable/splash_icon"/>
+   <TextView
+       android:textStyle="bold"
+       android:textSize="20dp"
+       android:textColor="@color/red"
+       android:gravity="center"
+       android:text="Welcome To BloodBank "
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content" />
+
+</LinearLayout>
