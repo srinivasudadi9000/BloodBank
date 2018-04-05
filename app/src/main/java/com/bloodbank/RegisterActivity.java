@@ -1,14 +1,20 @@
 package com.bloodbank;
 
+import android.*;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bloodbank.DonarDetails.Details;
+import com.bloodbank.EventActivities.EventsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -35,9 +42,11 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.content.ContentValues.TAG;
+
 public class RegisterActivity extends AppCompatActivity {
-    EditText etFullName, etMobile, etEmail, etPassword, etAddress;
-    String name, email, number, password, bloodgroup, pincode;
+    EditText etFullName, etMobile, etEmail, etPassword, etAddress,aadhar_et;
+    String name, email, number, password, bloodgroup, pincode,aadhar;
     Button btnSave;
     Spinner spinner;
     private FirebaseAuth mAuth;
@@ -79,6 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etAddress = (EditText) findViewById(R.id.etAddress);
+        aadhar_et = (EditText) findViewById(R.id.aadhar_et);
         textView = findViewById(R.id.txtLogin);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (!isValidPincode(pincode)) {
                     etAddress.setError("Invalid Pincode");
                 }
+                aadhar = aadhar_et.getText().toString();
                 bloodgroup = spinner.getSelectedItem().toString();
                 password = etPassword.getText().toString().trim();
               /*  if (!isValidPassword(password)) {
@@ -122,6 +133,12 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_NETWORK_STATE}, 0);
+        }
 
     }
 
@@ -154,13 +171,23 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return false;
     }
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
+            //resume tasks needing this permission
+        }
+    }
     private void saveDate() {
 
 
         if (name.length() == 0) {
             showalert("Please enter username should not be empty", RegisterActivity.this);
-        } else if (email.length() == 0) {
+        } else if (aadhar_et.getText().toString().length() ==0 || aadhar_et.getText().toString().length() <12){
+            showalert("Please enter valid Aadhar Number", RegisterActivity.this);
+
+        }else if (email.length() == 0) {
             showalert("Please enter email should not be empty", RegisterActivity.this);
 
 
@@ -191,8 +218,15 @@ public class RegisterActivity extends AppCompatActivity {
            /* if (!name.isEmpty() && !pincode.isEmpty() && isValidPincode(pincode) && !email.isEmpty() && !isValidEmail(email) && !number.isEmpty() && isValidNumber(number)
                     && !password.isEmpty() && isValidPassword(password) && !bloodgroup.equals("Select Your Blood Group")) {
 */
+            GPSTracker gpsTracker = new GPSTracker(RegisterActivity.this);
+            Location locatio = gpsTracker.getLocation();
+            Double lat = 0.0, lat_long = 0.0;
+            if (locatio != null) {
+                lat = locatio.getLatitude();
+                lat_long = locatio.getLongitude();
+            }
             String id = myRef.push().getKey();
-            Details details = new Details(id, name, email, number, password, bloodgroup, pincode);
+            Details details = new Details(id, name, email, number, password, bloodgroup, pincode,aadhar,lat,lat_long);
             myRef.child(id).setValue(details);
             progressDialog.setMessage("Please Wait");
             progressDialog.show();
@@ -211,7 +245,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Random ran = new Random();
                                 int x = ran.nextInt(98356) + 5;
                                 String reg = String.valueOf(x);
-                                List<String> toEmailList = Arrays.asList("srinivasdadi9000@gmail.com".split("\\s*,\\s*"));
+                                List<String> toEmailList = Arrays.asList(email.toString().split("\\s*,\\s*"));
                                 new SendMailTask(RegisterActivity.this).execute("texvndinesh@gmail.com",
                                         "bunty4444", toEmailList,
                                         "BloodDonation ", "<!DOCTYPE html>\n" +

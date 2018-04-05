@@ -11,16 +11,42 @@ public class Details {
     String number;
     String password1;
     String blood;
-    String pincode;
+    String pincode,aadhar;
+    Double latitude,longitude;
 
-    public Details(String id, String name, String email, String number, String password, String blood, String pincode) {
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getAadhar() {
+        return aadhar;
+    }
+
+    public void setAadhar(String aadhar) {
+        this.aadhar = aadhar;
+    }
+
+    public Details(String id, String name, String email, String number, String password, String blood, String pincode, String aadhar,
+                   Double latitude,Double longitude) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.number = number;
-        this.password1 = password;
-        this.blood = blood;
-        this.pincode = pincode;
+        this.password1 = password;this.latitude = latitude;
+        this.blood = blood; this.longitude = longitude;
+        this.pincode = pincode;this.aadhar = aadhar;
     }
 
     public Details() {

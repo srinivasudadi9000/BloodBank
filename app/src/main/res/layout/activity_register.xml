@@ -64,6 +64,23 @@
 
                 </android.support.design.widget.TextInputLayout>
 
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
+
+                    <EditText
+                        android:maxLength="12"
+                        android:id="@+id/aadhar_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:hint="Enter Aadhar Number"
+                        android:padding="10dp"
+                        />
+
+                </android.support.design.widget.TextInputLayout>
 
 
                 <android.support.design.widget.TextInputLayout
@@ -94,6 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:maxLength="10"
                         android:inputType="phone"
                         android:hint="Enter Mobile"
                         android:padding="10dp"
@@ -139,6 +157,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:maxLength="6"
                         android:inputType="number"
                         android:hint="Enter Pin Code"
                         android:padding="10dp" />
