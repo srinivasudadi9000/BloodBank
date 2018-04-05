@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.bloodbank.MapsActivity;
 import com.bloodbank.R;
+import com.bloodbank.SplashScreenActivity;
 import com.bloodbank.Tollfree;
 
 import java.util.Calendar;
@@ -77,6 +79,8 @@ public class EventsAdapter extends ArrayAdapter<EventItem> {
                 context.startActivity(map);
             }
         });
+        map_img.startAnimation(AnimationUtils.loadAnimation(context,R.anim.zoomout));
+
         event =eventList.get(position);
         textView.setText(event.getDate1());
         textView1.setText( event.getLocation());
